@@ -3,11 +3,15 @@ require 'sinatra/json'
 require 'psych'
 
 class PhoneNumberApi < Sinatra::Base
-  # responds with
+  # Responds with a 200 and list of all phone numbers known, regardless of order
+  # or relation to a user
   get '/phone_numbers' do
     json phone_numbers: customers.flat_map { |customer| customer[:numbers] }
   end
 
+  # Responds with either:
+  # - 200 and list of phone numbers and their activation states for the requested customer
+  # - 404 if customer is not found
   get '/customer/:id/phone_numbers' do
     if !(current = customer(params[:id].to_i)).nil?
       json phone_numbers: current[:numbers]
@@ -17,6 +21,13 @@ class PhoneNumberApi < Sinatra::Base
     end
   end
 
+  # Writes to yaml with new state after reconstructing the db hash.
+  # Responds with:
+  # - 200 and success message
+  # - 404 if customer not found or phone number not found in customer list
+  #
+  # Not too pleased with this, I think it could be nicer if I'd structured the Yaml
+  # to reflect the actual tables and not a DB query reponse on both tables.
   post '/customer/:id/activate/:phone_number' do
     in_number = params[:phone_number].gsub('-',' ')
     if !(current = customer(params[:id].to_i)).nil?
