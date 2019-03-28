@@ -1,0 +1,24 @@
+# Simple outline of possible tables:
+# - customer has many numbers
+#   table: customer (id)
+# - number has one customer
+#   table: numbers (id, activated, number, customer_id)
+#
+# YAML representation of customer table with relations.
+customers:
+  - id: 1
+    numbers:
+      - number: 0161 123 1234
+        activated: false
+      - number: 0161 123 4567
+        activated: false
+      - number: 0161 123 7890
+        activated: false
+      - number: 0161 123 9999
+        activated: false
+  - id: 2
+    numbers:
+      - number: 0161 123 4567
+        activated: false
+      - number: 0161 123 1234
+        activated: false
